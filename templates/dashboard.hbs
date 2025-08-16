@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{project_name}} - Requirements Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; }
+        .dashboard { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+        .sidebar { background: #1e293b; color: white; padding: 20px; }
+        .sidebar h1 { font-size: 20px; margin-bottom: 30px; }
+        .nav-item { padding: 10px 15px; margin: 5px 0; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .nav-item:hover, .nav-item.active { background: #334155; }
+        .main-content { padding: 20px; overflow-y: auto; }
+        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 32px; font-weight: bold; margin-bottom: 5px; }
+        .metric-label { color: #64748b; font-size: 14px; }
+        .metric-change { font-size: 12px; margin-top: 5px; }
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .chart-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .chart-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; }
+        .canvas-container { position: relative; height: 300px; }
+        .issues-list { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .issues-header { padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .issue-item { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
+        .issue-item:last-child { border-bottom: none; }
+        .severity-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .severity-critical { background: #fef2f2; color: #dc2626; }
+        .severity-high { background: #fff7ed; color: #ea580c; }
+        .severity-medium { background: #fffbeb; color: #d97706; }
+        .severity-low { background: #f0fdf4; color: #16a34a; }
+        .hidden { display: none; }
+        .tab-content { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>🔍 PRISM</h1>
+            <div class="nav-item active" onclick="showTab('overview')">📊 Overview</div>
+            <div class="nav-item" onclick="showTab('issues')">⚠️ Issues</div>
+            <div class="nav-item" onclick="showTab('entities')">🎯 Entities</div>
+            <div class="nav-item" onclick="showTab('requirements')">📋 Requirements</div>
+            <div class="nav-item" onclick="showTab('artifacts')">🎨 Artifacts</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>{{project_name}}</h1>
+                <p>Requirements Analysis Dashboard • Generated {{timestamp}}</p>
+                {{#if branding}}<p style="margin-top: 10px; color: #6366f1; font-weight: 500;">{{branding}}</p>{{/if}}
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overview-tab" class="tab-content">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: #6366f1;">{{len requirements}}</div>
+                        <div class="metric-label">Requirements Analyzed</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: #ef4444;">{{len ambiguities}}</div>
+                        <div class="metric-label">Issues Identified</div>
+                        {{#if (gt (len ambiguities) 5)}}<div class="metric-change negative">High issue count</div>{{/if}}
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: #10b981;">{{#if completeness_score}}{{completeness_score}}%{{else}}--{{/if}}</div>
+                        <div class="metric-label">Completeness Score</div>
+                        {{#if completeness_score}}
+                        {{#if (gt completeness_score 80)}}<div class="metric-change positive">Excellent</div>{{else if (gt completeness_score 60)}}<div class="metric-change">Good</div>{{else}}<div class="metric-change negative">Needs Improvement</div>{{/if}}
+                        {{/if}}
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: #f59e0b;">{{len entities.actors}}</div>
+                        <div class="metric-label">Actors Identified</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">Issues by Severity</div>
+                        <div class="canvas-container">
+                            <canvas id="severityChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Entity Distribution</div>
+                        <div class="canvas-container">
+                            <canvas id="entityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issues Tab -->
+            <div id="issues-tab" class="tab-content hidden">
+                <div class="issues-list">
+                    <div class="issues-header">
+                        <h2>Detected Issues ({{len ambiguities}})</h2>
+                    </div>
+                    {{#each ambiguities}}
+                    <div class="issue-item">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">"{{text}}"</div>
+                            <div style="color: #64748b; font-size: 14px;">{{reason}}</div>
+                        </div>
+                        <span class="severity-badge severity-{{lowercase severity}}">{{severity}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <!-- Entities Tab -->
+            <div id="entities-tab" class="tab-content hidden">
+                <div class="charts-grid">
+                    {{#if entities.actors}}
+                    <div class="chart-card">
+                        <div class="chart-title">Actors ({{len entities.actors}})</div>
+                        <ul style="list-style: none; padding: 0;">
+                            {{#each entities.actors}}
+                            <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">👥 {{this}}</li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+
+                    {{#if entities.actions}}
+                    <div class="chart-card">
+                        <div class="chart-title">Actions ({{len entities.actions}})</div>
+                        <ul style="list-style: none; padding: 0;">
+                            {{#each entities.actions}}
+                            <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">⚡ {{this}}</li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+
+                {{#if entities.objects}}
+                <div class="chart-card" style="margin-top: 20px;">
+                    <div class="chart-title">Objects ({{len entities.objects}})</div>
+                    <ul style="list-style: none; padding: 0;">
+                        {{#each entities.objects}}
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">📦 {{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/if}}
+            </div>
+
+            <!-- Requirements Tab -->
+            <div id="requirements-tab" class="tab-content hidden">
+                <div class="chart-card">
+                    <div class="chart-title">Original Requirements</div>
+                    {{#each requirements}}
+                    <div style="background: #f8fafc; padding: 15px; margin: 10px 0; border-radius: 6px; border-left: 4px solid #6366f1;">
+                        {{this}}
+                    </div>
+                    {{/each}}
+                </div>
+
+                {{#if improved_requirements}}
+                <div class="chart-card" style="margin-top: 20px;">
+                    <div class="chart-title">Improved Requirements</div>
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 6px; border-left: 4px solid #10b981;">
+                        {{{improved_requirements}}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+
+            <!-- Artifacts Tab -->
+            <div id="artifacts-tab" class="tab-content hidden">
+                {{#if uml_diagrams}}
+                <div class="charts-grid">
+                    {{#if uml_diagrams.use_case}}
+                    <div class="chart-card">
+                        <div class="chart-title">Use Case Diagram</div>
+                        <pre style="background: #f8fafc; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 12px;">{{uml_diagrams.use_case}}</pre>
+                    </div>
+                    {{/if}}
+
+                    {{#if uml_diagrams.sequence}}
+                    <div class="chart-card">
+                        <div class="chart-title">Sequence Diagram</div>
+                        <pre style="background: #f8fafc; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 12px;">{{uml_diagrams.sequence}}</pre>
+                    </div>
+                    {{/if}}
+                </div>
+
+                {{#if uml_diagrams.class_diagram}}
+                <div class="chart-card" style="margin-top: 20px;">
+                    <div class="chart-title">Class Diagram</div>
+                    <pre style="background: #f8fafc; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 12px;">{{uml_diagrams.class_diagram}}</pre>
+                </div>
+                {{/if}}
+                {{/if}}
+
+                {{#if test_cases}}
+                <div class="chart-card" style="margin-top: 20px;">
+                    <div class="chart-title">Generated Test Cases</div>
+                    {{#if test_cases.happy_path}}
+                    <h4 style="color: #10b981; margin: 15px 0 10px 0;">✅ Happy Path</h4>
+                    <ul>
+                        {{#each test_cases.happy_path}}
+                        <li style="margin: 5px 0;">{{this}}</li>
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+
+                    {{#if test_cases.negative_tests}}
+                    <h4 style="color: #ef4444; margin: 15px 0 10px 0;">❌ Negative Tests</h4>
+                    <ul>
+                        {{#each test_cases.negative_tests}}
+                        <li style="margin: 5px 0;">{{this}}</li>
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Chart.js configurations
+        const severityData = {
+            labels: ['Critical', 'High', 'Medium', 'Low'],
+            datasets: [{
+                data: [
+                    {{count_by_severity ambiguities "Critical"}},
+                    {{count_by_severity ambiguities "High"}},
+                    {{count_by_severity ambiguities "Medium"}},
+                    {{count_by_severity ambiguities "Low"}}
+                ],
+                backgroundColor: ['#dc2626', '#ea580c', '#d97706', '#16a34a'],
+                borderWidth: 0
+            }]
+        };
+
+        const entityData = {
+            labels: ['Actors', 'Actions', 'Objects'],
+            datasets: [{
+                data: [{{len entities.actors}}, {{len entities.actions}}, {{len entities.objects}}],
+                backgroundColor: ['#6366f1', '#10b981', '#f59e0b'],
+                borderWidth: 0
+            }]
+        };
+
+        // Initialize charts
+        new Chart(document.getElementById('severityChart'), {
+            type: 'doughnut',
+            data: severityData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('entityChart'), {
+            type: 'pie',
+            data: entityData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

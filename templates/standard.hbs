@@ -1,0 +1,118 @@
+# 🔍 {{#if title}}{{title}}{{else}}PRISM Requirements Analysis Report{{/if}}
+
+{{#if branding}}
+**{{branding}}**
+{{/if}}
+
+Generated on {{timestamp}} by PRISM v{{version}}
+
+---
+
+## 📝 Analyzed Requirement{{pluralize (len requirements) "" "s"}}
+
+{{#each requirements}}
+> {{this}}
+{{/each}}
+
+{{#if ambiguities}}
+## ⚠️ Detected Ambiguities
+
+**Total Issues Found:** {{len ambiguities}}
+
+{{#each ambiguities}}
+### {{#if (eq severity "Critical")}}🔴{{else if (eq severity "High")}}🟠{{else if (eq severity "Medium")}}🟡{{else}}🟢{{/if}} Issue #{{@index}}: "{{text}}"
+
+- **Problem:** {{reason}}
+- **Severity:** {{severity}}
+- **Suggested Improvements:**
+{{#each suggestions}}
+  - {{this}}
+{{/each}}
+
+{{/each}}
+{{/if}}
+
+{{#if entities}}
+## 🎯 Extracted Entities
+
+{{#if entities.actors}}
+### 👥 Actors
+{{#each entities.actors}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+{{#if entities.actions}}
+### ⚡ Actions
+{{#each entities.actions}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+{{#if entities.objects}}
+### 📦 Objects
+{{#each entities.objects}}
+- {{this}}
+{{/each}}
+{{/if}}
+{{/if}}
+
+{{#if improved_requirements}}
+## ✨ Improved Requirements
+
+{{improved_requirements}}
+{{/if}}
+
+{{#if uml_diagrams}}
+## 🎨 UML Diagrams
+
+{{#if uml_diagrams.use_case}}
+### Use Case Diagram
+```plantuml
+{{uml_diagrams.use_case}}
+```
+{{/if}}
+
+{{#if uml_diagrams.sequence}}
+### Sequence Diagram
+```plantuml
+{{uml_diagrams.sequence}}
+```
+{{/if}}
+
+{{#if uml_diagrams.class_diagram}}
+### Class Diagram
+```plantuml
+{{uml_diagrams.class_diagram}}
+```
+{{/if}}
+{{/if}}
+
+{{#if test_cases}}
+## 🧪 Test Cases
+
+{{#if test_cases.happy_path}}
+### ✅ Happy Path Tests
+{{#each test_cases.happy_path}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+{{#if test_cases.negative_tests}}
+### ❌ Negative Test Cases
+{{#each test_cases.negative_tests}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+{{#if test_cases.edge_cases}}
+### ⚠️ Edge Cases
+{{#each test_cases.edge_cases}}
+- {{this}}
+{{/each}}
+{{/if}}
+{{/if}}
+
+---
+
+*Generated with PRISM - AI-Powered Requirement Analyzer*

@@ -1,0 +1,79 @@
+# Executive Requirements Summary
+
+{{#if branding}}**{{branding}}**{{/if}}
+
+Generated {{format_date "%B %d, %Y"}}
+
+---
+
+## Key Metrics
+
+| Metric | Value | Status |
+|--------|-------|--------|
+| Requirements Analyzed | {{len requirements}} | ✅ |
+| Issues Identified | {{len ambiguities}} | {{#if (gt (len ambiguities) 5)}}⚠️{{else}}✅{{/if}} |
+| Completeness Score | {{#if completeness_score}}{{completeness_score}}%{{else}}N/A{{/if}} | {{#if completeness_score}}{{#if (gt completeness_score 80)}}✅{{else if (gt completeness_score 60)}}⚠️{{else}}❌{{/if}}{{else}}N/A{{/if}} |
+
+## Risk Assessment
+
+{{#if (count_by_severity ambiguities "Critical")}}
+🔴 **CRITICAL RISK** - {{count_by_severity ambiguities "Critical"}} critical {{pluralize (count_by_severity ambiguities "Critical") "issue" "issues"}} require immediate attention.
+{{else if (count_by_severity ambiguities "High")}}
+🟠 **HIGH RISK** - {{count_by_severity ambiguities "High"}} high-severity {{pluralize (count_by_severity ambiguities "High") "issue" "issues"}} should be addressed before implementation.
+{{else if (gt (len ambiguities) 0)}}
+🟡 **MODERATE RISK** - {{len ambiguities}} {{pluralize (len ambiguities) "issue" "issues"}} identified for improvement.
+{{else}}
+🟢 **LOW RISK** - Requirements quality is good with minimal issues.
+{{/if}}
+
+## Recommendations
+
+{{#if (gt (count_by_severity ambiguities "Critical") 0)}}
+### Immediate Actions Required
+- Address all critical issues before proceeding
+- Stakeholder review and approval required
+- Update requirement documentation
+{{/if}}
+
+{{#if (gt (count_by_severity ambiguities "High") 0)}}
+### High Priority Actions
+- Review high-severity issues with technical leads
+- Update affected design documents
+- Consider impact on project timeline
+{{/if}}
+
+### General Recommendations
+- Run comprehensive testing on affected components
+- Update traceability matrix with requirement changes  
+- Monitor implementation for requirement drift
+
+---
+
+## Detailed Analysis
+
+{{#if improved_requirements}}
+### Improved Requirements Available
+AI-generated requirement improvements are available for review. These address the identified ambiguities and provide more specific, measurable criteria.
+{{/if}}
+
+{{#if uml_diagrams}}
+### Design Artifacts
+UML diagrams have been generated to support system design:
+- Use Case Diagrams
+- Sequence Diagrams  
+- Class Diagrams
+{{/if}}
+
+{{#if test_cases}}
+### Test Coverage
+Comprehensive test cases generated covering:
+- {{len test_cases.happy_path}} Happy Path scenarios
+- {{len test_cases.negative_tests}} Negative test cases
+- {{len test_cases.edge_cases}} Edge cases
+{{/if}}
+
+---
+
+**Next Review:** {{format_date "%Y-%m-%d"}} (recommended quarterly)
+
+*This summary was generated automatically by PRISM. Manual review recommended for critical decisions.*

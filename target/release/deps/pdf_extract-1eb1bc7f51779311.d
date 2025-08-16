@@ -1,0 +1,11 @@
+E:\aiutils\prism\target\release\deps\pdf_extract-1eb1bc7f51779311.d: C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\lib.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\core_fonts.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\glyphnames.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\zapfglyphnames.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\encodings.rs
+
+E:\aiutils\prism\target\release\deps\libpdf_extract-1eb1bc7f51779311.rlib: C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\lib.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\core_fonts.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\glyphnames.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\zapfglyphnames.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\encodings.rs
+
+E:\aiutils\prism\target\release\deps\libpdf_extract-1eb1bc7f51779311.rmeta: C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\lib.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\core_fonts.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\glyphnames.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\zapfglyphnames.rs C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\encodings.rs
+
+C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\lib.rs:
+C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\core_fonts.rs:
+C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\glyphnames.rs:
+C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\zapfglyphnames.rs:
+C:\Users\Sriram\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pdf-extract-0.7.12\src\encodings.rs:

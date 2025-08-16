@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cargo:*)",
+      "Bash(./target/release/prism.exe --version)",
+      "Bash(./target/release/prism.exe --help)",
+      "Bash(./target/release/prism.exe analyze:*)",
+      "Bash(./target/release/prism.exe config:*)",
+      "Bash(mkdir:*)",
+      "Bash(timeout:*)",
+      "Bash(true)",
+      "Bash(rustc:*)",
+      "Bash(./check_config.exe)",
+      "Bash(rm:*)",
+      "Bash(./target/release/prism.exe tui:*)",
+      "Bash(.targetreleaseprism.exe config --show)",
+      "Bash(./target/release/prism.exe)",
+      "Bash(./target/release/prism.exe improve:*)",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:home.adelphi.edu)",
+      "WebFetch(domain:www.sdlcforms.com)",
+      "Bash(cp:*)",
+      "Bash(./test_git_integration.exe)",
+      "Bash(./target/release/prism.exe validate:*)",
+      "Bash(./target/release/prism.exe trace:*)",
+      "Bash(./target/release/prism.exe dashboard:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
